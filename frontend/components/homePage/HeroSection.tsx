@@ -1,6 +1,45 @@
+import { useNavigate } from "react-router-dom";
+import { useUser } from '@clerk/clerk-react';
+import { toast, ToastContainer } from 'react-toastify';
+
 const HeroSection = () => {
+
+  const { isSignedIn } = useUser();
+  const navigate = useNavigate();
+
+  const handleUploadResumeClick = () => {
+    if (isSignedIn)
+      navigate("/Resume_checker")
+    else {
+      toast.warn('Please Sign In!', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  }
+
   return (
     <section className="relative flex flex-col-reverse lg:flex-row items-center justify-between max-w-7xl mx-auto px-6 py-16 lg:py-24 text-white">
+
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+
       {/* Left content */}
       <div className="w-full lg:w-1/2 space-y-6">
         <p className="text-sm font-semibold text-pink-300 uppercase tracking-wide">
@@ -26,7 +65,7 @@ const HeroSection = () => {
           </p>
 
           <div className="flex justify-center">
-            <button className="bg-green-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-green-600 transition-colors duration-200">
+            <button onClick={handleUploadResumeClick} className="bg-green-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-green-600 transition-colors duration-200">
               Upload Your Resume
             </button>
           </div>

@@ -1,4 +1,3 @@
-
 export const testingAPI = async (req,res) =>{
     try {
         return res.json({success:true,message:"Successfully extablished connection to Testing API"})

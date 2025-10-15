@@ -3,6 +3,7 @@ import Home from "../pages/Home.tsx"
 import About from "../pages/About.tsx"
 import Contact from "../pages/Contact.tsx"
 import Blog from "../pages/Blog.tsx"
+import Resume_checker from "../pages/Resume_checker.tsx"
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
         <Route path="/About" element={<About />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Blog" element={<Blog />} />
+        <Route path="/Resume_checker" element={<Resume_checker />} />
       </Routes>
     </div>
   )

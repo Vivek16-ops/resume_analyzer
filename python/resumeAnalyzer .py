@@ -1,3 +1,7 @@
+# Since this requires Higher Processing Configuration so currently we avoid this EndPoint
+
+# To-Do :- Host this into strong machine then divert the connection to here 
+
 # AI Powered Resume Analyzer (API)
 from flask import Flask, request, jsonify
 from PyPDF2 import PdfReader
@@ -15,7 +19,7 @@ print("⏳ Loading Mistral model... this may take a few minutes.")
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_ID,
-    torch_dtype=torch.bfloat16,
+    dtype=torch.float16,
     device_map="auto",
     trust_remote_code=True
 )
@@ -40,7 +44,8 @@ def read_docx(file_path):
 # ---------------- Mistral response generator ----------------
 def generate_analysis(prompt, max_new_tokens=800):
     inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=2048).to(model.device)
-    outputs = model.generate(**inputs, max_new_tokens=max_new_tokens)
+    outputs = model.generate(**inputs, max_new_tokens=max_new_tokens,pad_token_id=tokenizer.eos_token_id
+)
     return tokenizer.decode(outputs[0], skip_special_tokens=True)
 
 # ---------------- Flask route ----------------
@@ -76,8 +81,8 @@ def analyze():
     You are an AI Resume Analyzer.
     Analyze the following resume for quality, relevance, and writing.
     Return a structured JSON output with:
-    - "status" (Good, Perfect, Bad) and give any other if you want to 
-    - "comments" (constructive feedback) along with scope of improvement
+    - "status" (Good, Perfect, Bad and You can give another as well according to description and resume) and give any other if you want to 
+    - "comments" (constructive feedback) along with scope of improvement and some review
     - "ratings" (object with grammar, efficiency, highlights — each out of 10)
     
     Resume Text:
@@ -97,4 +102,4 @@ def analyze():
 
 # ---------------- Run ----------------
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=False, port=5000)

@@ -2,17 +2,25 @@ import mongoose from "mongoose";
 
 const documentSchema = new mongoose.Schema({
     email: {
-        type:String,
+        type: String,
         required: true
     },
     document_name: {
         type: String,
-        required: true,
-        default: "Upload resume"
-    }, status: {
+        require: true,
+        default: "upload resume"
+    },
+    status: {
         type: String,
         required: true,
         default: "Good"
+    },
+    comments: {
+        type: String,
+        default: "Your resume comments"
+    }, ratings: {
+        type: Map,
+        of: Number // allows dynamic keys like creativity, clarity, etc.
     }
 }, { timestamps: true })
 

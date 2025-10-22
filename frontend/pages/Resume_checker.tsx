@@ -1,13 +1,15 @@
 import { useUser } from '@clerk/clerk-react';
 import { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import { motion } from "framer-motion";
 
 type resultStruct = {
   email: string,
   document_name: string,
   status: string,
   comments: string,
-  ratings: object
+  ratings: object,
+  ats_score: number
 };
 
 const Resume_checker = () => {
@@ -27,19 +29,24 @@ const Resume_checker = () => {
     if (file && (file.type === "application/pdf" || file.name.endsWith(".docx"))) {
       setSelectedFile(file);
     } else {
-      alert("Please upload only .pdf or .docx files");
+      toast.error("Please upload only .pdf or .docx files");
       e.target.value = "";
     }
   };
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      alert("Please choose a file before uploading");
+      toast('Please Attach the file before proceeding further', {
+        icon: '📁',
+      });
       return;
     }
 
     if (!userDescription) {
-      alert("Please Describe for which purpose you want these resume to be analyzed")
+       toast('Please Describe For Whcih Purpose You Want this Resume to be Analyzed', {
+        icon: '🤷‍♂️',
+      });
+      return;
     }
 
     // Preparing the Form Data
@@ -67,9 +74,9 @@ const Resume_checker = () => {
           },
           body: JSON.stringify({ email }) // Replace with dynamic email if needed
         });
-        
+
         const laestDocumentResult = await lastestDocument.json();
-        console.log(typeof(laestDocumentResult.document))
+        console.log(typeof (laestDocumentResult.document))
         setResult(laestDocumentResult.document)
       }
       else
@@ -142,48 +149,133 @@ const Resume_checker = () => {
         </div>
 
         {/* Right Section */}
-        <div className="right w-full md:w-1/2 flex flex-col justify-center items-center bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-white/20 min-h-[350px] text-center">
-          <h3 className="text-xl font-semibold mb-3 text-pink-300">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="right w-full md:w-1/2 flex flex-col justify-center items-center 
+      bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-white/20 
+      min-h-[400px] text-center relative overflow-hidden"
+        >
+          {/* Subtle Glow Effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-purple-500/5 to-indigo-500/10 blur-3xl" />
+
+          <h3 className="text-2xl font-semibold mb-4 text-pink-300 relative z-10">
             Resume Analysis Result
           </h3>
 
           {result ? (
-            <div className="text-gray-100 w-full text-left space-y-4">
+            <div className="text-gray-100 w-full text-left space-y-6 relative z-10">
               {/* Status */}
-              <div>
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
                 <span className="font-semibold text-indigo-400">Status:</span>{" "}
                 <span className="text-white">{result.status}</span>
-              </div>
+              </motion.div>
 
               {/* Comments */}
-              <div>
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
                 <span className="font-semibold text-indigo-400">Comments:</span>
                 <ul className="list-disc list-inside mt-2 text-gray-200 space-y-1">
-                  {result.comments?.split('\n').map((line, index) => (
+                  {result.comments?.split("\n").map((line, index) => (
                     <li key={index}>{line}</li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
 
               {/* Ratings */}
-              <div>
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+              >
                 <span className="font-semibold text-indigo-400">Ratings:</span>
-                <ul className="list-none mt-2 text-gray-200 space-y-1">
-                  {Object.entries(result.ratings || {}).map(([key, value]) => (
-                    <li key={key}>
-                      <span className="capitalize">{key}:</span>{" "}
-                      <span className="text-pink-300 font-semibold">{value}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <div className="mt-3 space-y-3">
+                  {Object.entries(result.ratings || {}).map(([key, value]) => {
+                    const normalized = Math.min(Math.max(value, 0), 10); // clamp between 0–10
+                    const percentage = (normalized / 10) * 100;
+
+                    return (
+                      <div key={key} className="w-full">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="capitalize">{key}</span>
+                          <span className="text-pink-300 font-semibold">{normalized} / 10</span>
+                        </div>
+                        <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${percentage}%` }}
+                            transition={{ duration: 0.8 }}
+                            className="h-full bg-gradient-to-r from-pink-400 to-indigo-500 rounded-full"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+
+              {/* ATS Score (Circular Progress Bar) */}
+              {result.ats_score !== undefined && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
+                  className="flex flex-col items-center mt-6"
+                >
+                  <span className="font-semibold text-indigo-400 mb-3">
+                    ATS Score
+                  </span>
+                  <div className="relative w-24 h-24">
+                    <svg className="w-full h-full transform -rotate-90">
+                      <circle
+                        cx="48"
+                        cy="48"
+                        r="40"
+                        stroke="white"
+                        strokeWidth="6"
+                        className="opacity-20"
+                        fill="transparent"
+                      />
+                      <motion.circle
+                        cx="48"
+                        cy="48"
+                        r="40"
+                        stroke="url(#gradient)"
+                        strokeWidth="6"
+                        fill="transparent"
+                        strokeDasharray="251"
+                        strokeDashoffset={251 - (251 * result.ats_score) / 100}
+                        strokeLinecap="round"
+                        transition={{ duration: 1 }}
+                      />
+                      <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                          <stop offset="0%" stopColor="#ff00cc" />
+                          <stop offset="100%" stopColor="#333399" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <span className="absolute inset-0 flex items-center justify-center text-xl font-bold text-pink-300">
+                      {result.ats_score}%
+                    </span>
+                  </div>
+                </motion.div>
+              )}
             </div>
           ) : (
-            <p className="text-gray-300 italic">
+            <p className="text-gray-300 italic relative z-10">
               Upload your document to view detailed feedback here.
             </p>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

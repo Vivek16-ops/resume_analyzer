@@ -34,6 +34,7 @@ export async function analyzeResume(file, user_description = "") {
     - "status" (Good, Perfect, Bad or others type of status will also be fine based on analysis)
     - "comments" (constructive feedback, scope of improvement, review)
     - "ratings" (object with grammar, efficiency, highlights — each out of 10, and add as many of others parameters as required)
+    - ats_score (score after analyzing the resume and this should be out of 100)
 
     Resume Text:
     ${resumeText}

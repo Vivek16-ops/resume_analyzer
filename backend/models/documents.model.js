@@ -15,6 +15,11 @@ const documentSchema = new mongoose.Schema({
         required: true,
         default: "Good"
     },
+    ats_score:{
+        type:Number,
+        required:true,
+        default:50
+    },
     comments: {
         type: String,
         default: "Your resume comments"

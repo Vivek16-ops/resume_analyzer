@@ -4,20 +4,22 @@ import cors from "cors"
 import testingRoutes from './routes/testing.js'
 import FileHandling from './routes/fileHandling.js'
 import getRecentDetail from './routes/getRecentDetail.js'
+import getDocuments from './routes/getDocuments.js'
 import connectMongoDb from './db/connectDB.js';
 
 const app = express();
 
 dotenv.config();
 
-const PORT =  8000;
+const PORT = 8000;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/testAPI', testingRoutes);
 app.use('/api/fileHandling', FileHandling);
-app.use('/api/getRecentDetail',getRecentDetail)
+app.use('/api/getRecentDetail', getRecentDetail)
+app.use('/api/getDocuments', getDocuments)
 
 app.listen(PORT, (error) => {
     if (!error) {

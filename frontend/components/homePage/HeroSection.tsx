@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useUser } from '@clerk/clerk-react';
-import { toast, ToastContainer } from 'react-toastify';
+import toast, { Toaster } from 'react-hot-toast';
 
 const HeroSection = () => {
 
@@ -11,15 +11,8 @@ const HeroSection = () => {
     if (isSignedIn)
       navigate("/Resume_checker")
     else {
-      toast.warn('Please Sign In!', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+      toast('Please Sign In', {
+        icon: '👏',
       });
     }
   }
@@ -27,17 +20,9 @@ const HeroSection = () => {
   return (
     <section className="relative flex flex-col-reverse lg:flex-row items-center justify-between max-w-7xl mx-auto px-6 py-16 lg:py-24 text-white">
 
-      <ToastContainer
+      <Toaster
         position="top-center"
-        autoClose={5000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
+        reverseOrder={true}
       />
 
       {/* Left content */}

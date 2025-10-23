@@ -1,12 +1,32 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import { useUser } from '@clerk/clerk-react';
+import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isSignedIn } = useUser();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    console.log("Function Called")
+    if (isSignedIn) {
+      navigate('/DocumentsPage')
+    }
+    else {
+      toast.error("Please Login To Proceed Furthur")
+      navigate('/');
+    }
+  }
 
   return (
     <nav className="w-full bg-black text-white sticky top-0 z-50">
+      <Toaster
+        position="top-center"
+        reverseOrder={true}
+      />
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         {/* Logo */}
         <h2 className="text-2xl font-bold tracking-wide cursor-pointer">
@@ -33,16 +53,15 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           {/* My Documents button */}
           <div className="hidden md:block">
-            <a
-              href="#"
+            <button onClick={() => handleClick()}
               className="bg-gradient-to-r from-pink-500 to-indigo-500 text-white px-4 py-2 rounded-md font-medium hover:opacity-90 transition-opacity"
             >
               My Documents
-            </a>
+            </button>
           </div>
 
           {/* Clerk Authentication */}
-          <div className="flex items-center hidden md:block">
+          <div className="flex items-center md:block">
             <SignedOut>
               <SignInButton mode="modal">
                 <button className="bg-white text-black font-semibold px-4 py-2 rounded-md hover:bg-gray-200 transition-all text-sm md:text-base">
@@ -70,19 +89,16 @@ const Navbar = () => {
         >
           <div className="space-y-1">
             <span
-              className={`block w-6 h-0.5 bg-white transition-transform ${
-                menuOpen ? "rotate-45 translate-y-1.5" : ""
-              }`}
+              className={`block w-6 h-0.5 bg-white transition-transform ${menuOpen ? "rotate-45 translate-y-1.5" : ""
+                }`}
             ></span>
             <span
-              className={`block w-6 h-0.5 bg-white ${
-                menuOpen ? "opacity-0" : ""
-              }`}
+              className={`block w-6 h-0.5 bg-white ${menuOpen ? "opacity-0" : ""
+                }`}
             ></span>
             <span
-              className={`block w-6 h-0.5 bg-white transition-transform ${
-                menuOpen ? "-rotate-45 -translate-y-1.5" : ""
-              }`}
+              className={`block w-6 h-0.5 bg-white transition-transform ${menuOpen ? "-rotate-45 -translate-y-1.5" : ""
+                }`}
             ></span>
           </div>
         </button>
@@ -105,12 +121,12 @@ const Navbar = () => {
               Blog
             </li>
             <li>
-              <a
-                href="#"
+              <button
+                onClick={() => handleClick()}
                 className="block text-center bg-gradient-to-r from-pink-500 to-indigo-500 text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity"
               >
                 My Documents
-              </a>
+              </button>
             </li>
             <li className="text-center">
               <SignedOut>

@@ -11,7 +11,6 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    console.log("Function Called")
     if (isSignedIn) {
       navigate('/DocumentsPage')
     }

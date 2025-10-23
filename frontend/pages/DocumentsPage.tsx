@@ -37,7 +37,6 @@ const DocumentsPage = () => {
                 ats_score: doc.ats_score,
             }));
             setdocuments(filteredDocs);
-            console.log(filteredDocs)
         } catch (error: any) {
             toast.error(error.message)
         }

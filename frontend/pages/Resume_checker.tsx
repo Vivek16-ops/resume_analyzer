@@ -75,9 +75,8 @@ const Resume_checker = () => {
           body: JSON.stringify({ email }) // Replace with dynamic email if needed
         });
 
-        const laestDocumentResult = await lastestDocument.json();
-        console.log(typeof (laestDocumentResult.document))
-        setResult(laestDocumentResult.document)
+        const latestDocumentResult = await lastestDocument.json();
+        setResult(latestDocumentResult.document)
       }
       else
         toast.error(result.message)

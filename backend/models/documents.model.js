@@ -23,7 +23,12 @@ const documentSchema = new mongoose.Schema({
     comments: {
         type: String,
         default: "Your resume comments"
-    }, ratings: {
+    },
+    suggestions: {
+        type: String,
+        default: "Your resume suggestions"
+    },
+     ratings: {
         type: Map,
         of: Number // allows dynamic keys like creativity, clarity, etc.
     }

@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast';
+import { useUser } from '@clerk/clerk-react';
 
 interface ContactFormData {
   fullName: string;
@@ -15,10 +17,37 @@ const Contact = () => {
     query: "",
   });
 
+  const [isDisabled, setIsDisabled] = useState(false); // Toggle for form login according to user signin status
+
+  const { user, isSignedIn } = useUser();
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
+    if (isSignedIn) {
+      setIsDisabled(false);
+      if (intervalId) clearInterval(intervalId);
+    } else {
+      setIsDisabled(true);
+      intervalId = setInterval(() => {
+        toast.error("Please Login To Send the Query");
+      }, 20000);
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      email: user?.primaryEmailAddress?.emailAddress || "Please Login to AutoFill Email",
+      fullName: user?.fullName || "Please Login to AutoFill Name",
+    }));
+
+    return () => {
+      if (intervalId) clearInterval(intervalId); // Cleanup on unmount or re-run
+    };
+  }, [isSignedIn]);
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  // ✅ Handle input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -26,15 +55,20 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Submit form and call API
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
 
+    const phoneRegex = /^[0-9]{10}$/;
+    if (formData.phone && !phoneRegex.test(formData.phone)) {
+      toast.error("Please enter a valid 10-digit phone number.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      // Example API endpoint (replace with your actual backend endpoint)
-      const response = await fetch("/api/contact", {
+      const response = await fetch("http://localhost:8000/api/contactForm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,14 +76,18 @@ const Contact = () => {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        setMessage("✅ Your query has been sent successfully!");
+      const result = await response.json();
+
+      if (result.success) {
+        setMessage(result.message);
+        toast.success(result.message);
         setFormData({ fullName: "", phone: "", email: "", query: "" });
       } else {
-        setMessage("❌ Something went wrong. Please try again later.");
+        toast.error(result.message || "Submission failed. Please try again.");
+        setMessage("❌ Submission failed. Please try again.");
       }
     } catch (error) {
-      console.error("Error:", error);
+      toast.error("Unable to connect to the server.");
       setMessage("❌ Unable to connect to the server.");
     } finally {
       setLoading(false);
@@ -58,6 +96,10 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-pink-500 via-purple-600 to-blue-700 text-white py-20 px-6 flex flex-col items-center">
+      <Toaster
+        position="top-center"
+        reverseOrder={true}
+      />
       <h1 className="text-5xl font-extrabold mb-16 text-center drop-shadow-lg">
         Contact Us
       </h1>
@@ -77,8 +119,20 @@ const Contact = () => {
                 type="text"
                 name="fullName"
                 value={formData.fullName}
-                onChange={handleChange}
                 placeholder="Enter your name"
+                className="w-full px-4 py-3 rounded-xl bg-white/20 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                required
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-lg font-medium mb-2">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                placeholder="Enter your email"
                 className="w-full px-4 py-3 rounded-xl bg-white/20 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
                 required
               />
@@ -94,20 +148,6 @@ const Contact = () => {
                 onChange={handleChange}
                 placeholder="Enter your phone number"
                 className="w-full px-4 py-3 rounded-xl bg-white/20 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
-              />
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="block text-lg font-medium mb-2">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                className="w-full px-4 py-3 rounded-xl bg-white/20 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
-                required
               />
             </div>
 
@@ -131,11 +171,12 @@ const Contact = () => {
             <div className="flex justify-center pt-4">
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || isDisabled}
                 className={`px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-600 rounded-xl text-white font-semibold shadow-lg transition ${loading ? "opacity-70 cursor-not-allowed" : "hover:opacity-90"
                   }`}
               >
                 {loading ? "Sending..." : "Submit"}
+                {isDisabled && " (Sign In to Send Query)"}
               </button>
             </div>
 

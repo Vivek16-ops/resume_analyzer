@@ -1,6 +1,6 @@
 import OpenAI from "openai";
-import { PDFDocument } from "pdf-lib";
 import mammoth from "mammoth";
+import pdf from "pdf-parse-debugging-disabled";
 
 // Helper function to extract pdf and docs
 export async function extractTextFromFile(file) {
@@ -16,7 +16,7 @@ export async function extractTextFromFile(file) {
     }
 
     if (fileType === "pdf") {
-        const data = await pdfParse(file.buffer);
+        const data = await pdf(file.buffer);
         return data.text;
     }
 
@@ -25,25 +25,26 @@ export async function extractTextFromFile(file) {
 
 
 export async function analyzeResume(file, user_description = "") {
-    const resumeText = await extractTextFromFile(file);
-
-    const prompt = `
-    You are an AI Resume Analyzer.
-    Analyze the following resume for quality, relevance, writing and others also.
-    Return a structured JSON output with:
-    - "status" (Good, Perfect, Bad or others type of status will also be fine based on analysis)
-    - "comments" (constructive feedback, scope of improvement, review)
-    - "ratings" (object with grammar, efficiency, highlights — each out of 10, and add as many of others parameters as required)
-    - ats_score (score after analyzing the resume and this should be out of 100)
-
-    Resume Text:
-    ${resumeText}
-
-    User Description:
-    ${user_description}
-    `;
-
     try {
+        const resumeText = await extractTextFromFile(file);
+
+        const prompt = `
+        You are an AI Resume Analyzer.
+        Analyze the following resume for quality, relevance, writing and others also.
+        Return a structured JSON output with:
+        - "status" (Good, Perfect, Bad or others type of status will also be fine based on analysis)
+        - "comments" (constructive feedback only) it should be arr only with bullet points
+        - "suggestions" (improvements to be made) it should be arr only with bullet points 
+        - "ratings" (object with grammar, efficiency, highlights — each out of 10, and add as many of others parameters as required)
+        - ats_score (score after analyzing the resume and this should be out of 100)
+    
+        Resume Text:
+        ${resumeText}
+    
+        User Description:
+        ${user_description}
+        `;
+
         const openai = new OpenAI({ apiKey: process.env.OPENAI_API });
 
         const response = await openai.chat.completions.create({

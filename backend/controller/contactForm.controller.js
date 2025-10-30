@@ -16,10 +16,13 @@ export const contactFormAPI = async (req, res) => {
             // Append phone if it's new
             if (phone && !existingUser.phone.includes(phone)) {
                 existingUser.phone.push(phone);
+                await existingUser.save();
             }
 
             // Always append query
             existingUser.query.push(query);
+            await existingUser.save();
+
             return res.json({ success: true, message: "Your Queries have been submitted successfully! Our team will get back to you shortly." })
         }
 

@@ -21,7 +21,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="w-full bg-black text-white sticky top-0 z-50">
+    <nav className="w-full overflow-x-hidden bg-black text-white sticky top-0 z-50">
       <Toaster
         position="top-center"
         reverseOrder={true}
@@ -60,7 +60,7 @@ const Navbar = () => {
           </div>
 
           {/* Clerk Authentication */}
-          <div className="flex items-center md:block">
+          <div className="flex items-center hidden md:block">
             <SignedOut>
               <SignInButton mode="modal">
                 <button className="bg-white text-black font-semibold px-4 py-2 rounded-md hover:bg-gray-200 transition-all text-sm md:text-base">
@@ -108,16 +108,16 @@ const Navbar = () => {
         <div className="md:hidden bg-black border-t border-gray-800">
           <ul className="flex flex-col gap-4 p-5 text-sm font-medium">
             <li className="cursor-pointer hover:text-gray-400 transition-colors">
-              Home
+              <Link to="/">Home</Link>
             </li>
             <li className="cursor-pointer hover:text-gray-400 transition-colors">
-              About
+              <Link to="/About">About</Link>
             </li>
             <li className="cursor-pointer hover:text-gray-400 transition-colors">
-              Contact
+              <Link to="/Contact">Contact</Link>
             </li>
             <li className="cursor-pointer hover:text-gray-400 transition-colors">
-              Blog
+              <Link to="/Blog">Blog</Link>
             </li>
             <li>
               <button

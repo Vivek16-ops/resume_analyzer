@@ -9,7 +9,8 @@ type resultStruct = {
   status: string,
   comments: string,
   ratings: object,
-  ats_score: number
+  ats_score: number,
+  suggestions:string
 };
 
 const Resume_checker = () => {
@@ -17,6 +18,7 @@ const Resume_checker = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [result, setResult] = useState<resultStruct>();
   const [userDescription, setUserDescription] = useState("")
+  const [isLoading, setIsLoading] = useState(false);
   let email: string | any = "";
   let fullName: string | any = "";
 
@@ -43,7 +45,7 @@ const Resume_checker = () => {
     }
 
     if (!userDescription) {
-       toast('Please Describe For Whcih Purpose You Want this Resume to be Analyzed', {
+      toast('Please Describe For Whcih Purpose You Want this Resume to be Analyzed', {
         icon: '🤷‍♂️',
       });
       return;
@@ -59,6 +61,7 @@ const Resume_checker = () => {
     formData.append('document_desc', userDescription);
 
     try {
+      setIsLoading(true);
       const response = await fetch("http://localhost:8000/api/fileHandling", {
         method: 'POST',
         body: formData
@@ -82,6 +85,8 @@ const Resume_checker = () => {
         toast.error(result.message)
     } catch (error) {
       toast.error('Error while AI API Request')
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -120,7 +125,7 @@ const Resume_checker = () => {
           </div>
 
           {/* Upload Section */}
-          <div className="w-full flex flex-col items-center gap-4">
+          <div className="w-full overflow-x-hidden flex flex-col items-center gap-4">
             <input
               type="file"
               accept=".pdf,.docx"
@@ -140,7 +145,7 @@ const Resume_checker = () => {
             </button>
 
             {selectedFile && (
-              <p className="text-sm text-gray-300">
+              <p className="text-sm overflow-x-hidden text-gray-300">
                 Selected: <span className="text-gray-100">{selectedFile.name}</span>
               </p>
             )}
@@ -159,9 +164,9 @@ const Resume_checker = () => {
           {/* Subtle Glow Effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-purple-500/5 to-indigo-500/10 blur-3xl" />
 
-          <h3 className="text-2xl font-semibold mb-4 text-pink-300 relative z-10">
+          {!isLoading && <h3 className="text-2xl font-semibold mb-4 text-pink-300 relative z-10">
             Resume Analysis Result
-          </h3>
+          </h3>}
 
           {result ? (
             <div className="text-gray-100 w-full text-left space-y-6 relative z-10">
@@ -182,6 +187,20 @@ const Resume_checker = () => {
                 transition={{ delay: 0.3 }}
               >
                 <span className="font-semibold text-indigo-400">Comments:</span>
+                <ul className="list-disc list-inside mt-2 text-gray-200 space-y-1">
+                  {result.suggestions?.split("\n").map((line, index) => (
+                    <li key={index}>{line}</li>
+                  ))}
+                </ul>
+              </motion.div>
+
+              {/* Comments */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <span className="font-semibold text-indigo-400">suggestions:</span>
                 <ul className="list-disc list-inside mt-2 text-gray-200 space-y-1">
                   {result.comments?.split("\n").map((line, index) => (
                     <li key={index}>{line}</li>
@@ -270,9 +289,54 @@ const Resume_checker = () => {
               )}
             </div>
           ) : (
-            <p className="text-gray-300 italic relative z-10">
+            (!isLoading && <p className="text-gray-300 italic relative z-10">
               Upload your document to view detailed feedback here.
-            </p>
+            </p>)
+          )}
+
+          {/* Loading Animation  */}
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 flex flex-col justify-center items-center 
+               bg-transparent backdrop-blur-2xl 
+               border border-white/10 rounded-2xl 
+               z-50 overflow-hidden"
+            >
+              {/* Subtle rotating ring */}
+              <motion.div
+                className="relative w-28 h-28 sm:w-36 sm:h-36"
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 3, ease: 'linear' }}
+              >
+                <div className="absolute inset-0 rounded-full border-[3px] border-transparent 
+                      border-t-pink-400 border-r-purple-400 opacity-70" />
+                <div className="absolute inset-2 rounded-full border-[3px] border-transparent 
+                      border-b-purple-400 border-l-pink-400 opacity-40" />
+              </motion.div>
+
+              {/* Simple text */}
+              <motion.h2
+                className="mt-6 text-base sm:text-lg font-medium text-white/90"
+                animate={{
+                  opacity: [0.7, 1, 0.7],
+                }}
+                transition={{ repeat: Infinity, duration: 1.6 }}
+              >
+                Analyzing your resume...
+              </motion.h2>
+
+              {/* Minimal progress bar */}
+              <div className="relative mt-6 w-48 sm:w-60 h-[5px] bg-white/20 rounded-full overflow-hidden">
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 rounded-full"
+                  animate={{ x: ['-100%', '100%'] }}
+                  transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+                />
+              </div>
+            </motion.div>
           )}
         </motion.div>
       </div>

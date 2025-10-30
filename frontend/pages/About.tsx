@@ -6,19 +6,25 @@ const About = () => {
       type: "image",
       title: "Our Vision",
       text: "We believe in crafting experiences that go beyond visuals — merging design, functionality, and purpose to create technology that inspires and empowers users globally.",
-      src: "/about1.png",
+      src: "/vision.png",
     },
+    // {
+    //   type: "video",
+    //   title: "Our Mission",
+    //   text: "Our mission is to simplify digital transformation for individuals and businesses through intuitive tools and AI-driven innovation that bring ideas to life effortlessly.",
+    //   src: "/about-video.mp4",
+    // },
     {
-      type: "video",
-      title: "Our Mission",
-      text: "Our mission is to simplify digital transformation for individuals and businesses through intuitive tools and AI-driven innovation that bring ideas to life effortlessly.",
-      src: "/about-video.mp4",
+      type: "image",
+      title: "Powerful Gen AI Analysis",
+      text: "We’re a diverse team of designers, developers, and innovators committed to building solutions that redefine simplicity, performance, and creativity.",
+      src: "/ai.png",
     },
     {
       type: "image",
-      title: "Our Team",
+      title: "ATS Score Optimization",
       text: "We’re a diverse team of designers, developers, and innovators committed to building solutions that redefine simplicity, performance, and creativity.",
-      src: "/about3.png",
+      src: "/ats.avif",
     },
   ];
 

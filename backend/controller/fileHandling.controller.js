@@ -13,28 +13,28 @@ export const fileHandlingFunc = async (req, res) => {
         const { fullName, email, document_desc } = info;
 
         // Calling the AI Function 
-        // const parsedData = await analyzeResume(file, document_desc)
+        const parsedData = await analyzeResume(file, document_desc)
 
         // For dummy
-        const parsedData = {
-            success: true,
-            message: 'Your resume successfully parseed',
-            response: {
-                status: 'Perfect',
-                comments: [
-                    'The resume is well-structured and includes all necessary information such as contact details, technical skills, projects, education, achievements, and publications.',
-                    'The candidate has a good balance of front-end and back-end skills.',
-                    'The projects section is solid, providing clear descriptions of responsibilities and used technologies.',
-                    "The achievements section effectively highlights the candidate's accomplishments.",
-                    "The education section is detailed and showcases the candidate's academic background effectively.",
-                    "However, there is a lack of a professional summary or objective statement that gives an overview of the candidate's career goal or professional experience.",
-                    'Additionally, there is no mention of previous work experience or internships, which can be a disadvantage if the candidate has any.',
-                    'The candidate could improve the resume by tailoring it more towards the specific job they are applying for, highlighting relevant skills and experiences.'
-                ],
-                ratings: { grammar: 10, efficiency: 9, highlights: 8, relevance: 8 },
-                ats_score:70
-            }
-        }
+        // const parsedData = {
+        //     success: true,
+        //     message: 'Your resume successfully parseed',
+        //     response: {
+        //         status: 'Perfect',
+        //         comments: [
+        //             'The resume is well-structured and includes all necessary information such as contact details, technical skills, projects, education, achievements, and publications.',
+        //             'The candidate has a good balance of front-end and back-end skills.',
+        //             'The projects section is solid, providing clear descriptions of responsibilities and used technologies.',
+        //             "The achievements section effectively highlights the candidate's accomplishments.",
+        //             "The education section is detailed and showcases the candidate's academic background effectively.",
+        //             "However, there is a lack of a professional summary or objective statement that gives an overview of the candidate's career goal or professional experience.",
+        //             'Additionally, there is no mention of previous work experience or internships, which can be a disadvantage if the candidate has any.',
+        //             'The candidate could improve the resume by tailoring it more towards the specific job they are applying for, highlighting relevant skills and experiences.'
+        //         ],
+        //         ratings: { grammar: 10, efficiency: 9, highlights: 8, relevance: 8 },
+        //         ats_score:70
+        //     }
+        // }
 
         // Dynamically fectched the ratings
         const ratingsMap = new Map();
@@ -47,10 +47,16 @@ export const fileHandlingFunc = async (req, res) => {
             email,
             document_name: file.originalname,
             status: parsedData.response.status || "Good",
-            comments: parsedData.response.comments.join('\n'),
+            comments: Array.isArray(parsedData.response.comments)
+                ? parsedData.response.comments.join('\n')
+                : String(parsedData.response.comments),
             ratings: ratingsMap,
-            ats_score:parsedData.response.ats_score
-        })
+            ats_score: parsedData.response.ats_score,
+            suggestions: Array.isArray(parsedData.response.suggestions)
+                ? parsedData.response.suggestions.join('\n')
+                : String(parsedData.response.suggestions),
+        });
+
 
         // Link Document to user
         let user = await User.findOne({ email });

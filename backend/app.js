@@ -7,6 +7,8 @@ import getRecentDetail from './routes/getRecentDetail.js'
 import getDocuments from './routes/getDocuments.js'
 import contactFormAPI from './routes/contactForm.js'
 import connectMongoDb from './db/connectDB.js';
+import blogUpload from './routes/blogUpload.js';
+import getBlogs from './routes/getBlogs.js';
 
 const app = express();
 
@@ -22,6 +24,8 @@ app.use('/api/fileHandling', FileHandling);
 app.use('/api/getRecentDetail', getRecentDetail)
 app.use('/api/getDocuments', getDocuments)
 app.use('/api/contactForm', contactFormAPI)
+app.use('/api/blogUpload', blogUpload)
+app.use('/api/getBlogs', getBlogs)
 
 app.listen(PORT, (error) => {
     if (!error) {

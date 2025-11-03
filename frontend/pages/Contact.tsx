@@ -22,7 +22,7 @@ const Contact = () => {
   const { user, isSignedIn } = useUser();
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout | null = null;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
 
     if (isSignedIn) {
       setIsDisabled(false);

@@ -26,6 +26,12 @@ const About = () => {
       text: "We’re a diverse team of designers, developers, and innovators committed to building solutions that redefine simplicity, performance, and creativity.",
       src: "/ats.avif",
     },
+    {
+      type: "video",
+      title: "Seamless User Experience",
+      text: "Our focus is on delivering seamless user experiences through cutting-edge technology and thoughtful design, ensuring every interaction is meaningful and impactful.",
+      src: "/sample.mp4",
+    },
   ];
 
   return (

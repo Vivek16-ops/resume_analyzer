@@ -4,8 +4,8 @@ import { analyzeResume } from "../utils/AiResponse.js"
 
 export const fileHandlingFunc = async (req, res) => {
     try {
-        const file = req.file;
-        const info = req.body;
+        const file = await req.file;
+        const info = await req.body;
 
         if (!file) return res.status(400).json({ success: false, message: "No file uploaded" });
         if (!info) return res.json(400).json({ success: true, message: "No user info or anything provided" })

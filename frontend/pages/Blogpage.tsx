@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 const BlogDetail = () => {
     const location = useLocation();
@@ -8,7 +9,6 @@ const BlogDetail = () => {
 
     // Converting Buffer into Base64 for Image and Video Rendering 
     const bufferToBase64 = (buffer: number[]) => {
-        console.log("Fetched Blog:",blog)
         const binary = buffer.reduce((acc, byte) => acc + String.fromCharCode(byte), "");
         return btoa(binary);
     };
@@ -45,6 +45,11 @@ const BlogDetail = () => {
         );
     }
 
+    useEffect(() => {
+        document.title = `${blog.title} - Resume Analyzer`;
+    }, [blog.title]);
+
+    
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#ff00cc] via-[#7a33cc] to-[#333399] text-white px-6 py-16 flex flex-col items-center">
             <motion.div

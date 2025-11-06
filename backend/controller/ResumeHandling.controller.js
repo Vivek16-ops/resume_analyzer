@@ -12,6 +12,13 @@ export const fileHandlingFunc = async (req, res) => {
 
         const { fullName, email, document_desc } = info;
 
+        // Finding the user
+        let user = await User.findOne({ email });
+
+        if(user && user.isPremium === false && user.totalRequests >= 5){
+            return  res.status(403).json({ success: false, message: "You have exhausted your  5 free requests. Please upgrade to premium to use this feature more." });
+        }
+
         // Calling the AI Function 
         const parsedData = await analyzeResume(file, document_desc)
 
@@ -59,15 +66,16 @@ export const fileHandlingFunc = async (req, res) => {
 
 
         // Link Document to user
-        let user = await User.findOne({ email });
         if (user) {
             user.documents.push(newDoc._id);
+            user.totalRequests += 1;
             await user.save();
         } else {
             user = await User.create({
                 fullName,
                 email,
-                documents: [newDoc._id]
+                documents: [newDoc._id],
+                totalRequests: 1
             })
         }
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import { useUser } from '@clerk/clerk-react';
@@ -7,8 +7,9 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleClick = () => {
     if (isSignedIn) {
@@ -20,12 +21,34 @@ const Navbar = () => {
     }
   }
 
+  // Register user on sign in if not already registered also check if it is admin or not
+  useEffect(() => {
+    if(isSignedIn){
+      const registerUser = async () => {
+        const response = await fetch('http://localhost:8000/api/registerUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: user?.primaryEmailAddress?.emailAddress,
+            fullName: user?.fullName,
+          }),
+        });
+        const data = await response.json();
+        if (data.success) {
+          toast.success(data.message);
+        }
+        setIsAdmin(data.isAdmin);
+      };
+      registerUser();
+    }
+   
+  }, [isSignedIn]);
+
   return (
     <nav className="w-full overflow-x-hidden bg-black text-white sticky top-0 z-50">
-      <Toaster
-        position="top-center"
-        reverseOrder={true}
-      />
+      <Toaster position="top-center" reverseOrder={true} />
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         {/* Logo */}
         <h2 className="text-2xl font-bold tracking-wide cursor-pointer">
@@ -52,12 +75,23 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           {/* My Documents button */}
           <div className="hidden md:block">
-            <button onClick={() => handleClick()}
-              className="bg-gradient-to-r from-pink-500 to-indigo-500 text-white px-4 py-2 rounded-md font-medium hover:opacity-90 transition-opacity"
+            <button
+              onClick={() => handleClick()}
+              className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-5 py-2 rounded-lg font-semibold shadow-md hover:opacity-90 transition-all duration-300"
             >
               My Documents
             </button>
           </div>
+
+          {/* Admin Button */}
+          {isAdmin && <div className="hidden md:block">
+            <Link
+              to="/Admin"
+              className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-5 py-2 rounded-lg font-semibold shadow-md hover:opacity-90 transition-all duration-300"
+            >
+              Admin
+            </Link>
+          </div>}
 
           {/* Clerk Authentication */}
           <div className="flex items-center hidden md:block">
@@ -122,11 +156,19 @@ const Navbar = () => {
             <li>
               <button
                 onClick={() => handleClick()}
-                className="block text-center bg-gradient-to-r from-pink-500 to-indigo-500 text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity"
+                className="block text-center bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg font-semibold shadow-md hover:opacity-90 transition-all duration-300"
               >
                 My Documents
               </button>
             </li>
+            {isAdmin && <li>
+              <Link
+                to="/Admin"
+                className="block text-center bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg font-semibold shadow-md hover:opacity-90 transition-all duration-300"
+              >
+                Admin
+              </Link>
+            </li>}
             <li className="text-center">
               <SignedOut>
                 <SignInButton mode="modal">

@@ -1,6 +1,11 @@
-import React from 'react'
+import { useEffect } from "react";
 
 const About = () => {
+
+  useEffect(() => {
+    document.title = "About Us - Resume Analyzer";
+  }, []);
+  
   const aboutSections = [
     {
       type: "image",

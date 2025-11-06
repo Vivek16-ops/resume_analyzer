@@ -2,13 +2,15 @@ import express from 'express';
 import dotenv from "dotenv";
 import cors from "cors"
 import testingRoutes from './routes/testing.js'
-import FileHandling from './routes/fileHandling.js'
+import FileHandling from './routes/resumeHandling.js'
 import getRecentDetail from './routes/getRecentDetail.js'
 import getDocuments from './routes/getDocuments.js'
 import contactFormAPI from './routes/contactForm.js'
 import connectMongoDb from './db/connectDB.js';
 import blogUpload from './routes/blogUpload.js';
 import getBlogs from './routes/getBlogs.js';
+import valiadateAdmin from './AdminRoutes/ValiddateAdmin.js';
+import registerUser from './routes/registerUser.js';
 
 const app = express();
 
@@ -26,6 +28,8 @@ app.use('/api/getDocuments', getDocuments)
 app.use('/api/contactForm', contactFormAPI)
 app.use('/api/blogUpload', blogUpload)
 app.use('/api/getBlogs', getBlogs)
+app.use('/api/validateAdmin', valiadateAdmin)
+app.use('/api/registerUser', registerUser)
 
 app.listen(PORT, (error) => {
     if (!error) {

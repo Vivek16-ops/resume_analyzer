@@ -22,6 +22,7 @@ const Contact = () => {
   const { user, isSignedIn } = useUser();
 
   useEffect(() => {
+    document.title = "Contact Us - Resume Analyzer";  
     let intervalId: ReturnType<typeof setInterval> | null = null;
 
     if (isSignedIn) {

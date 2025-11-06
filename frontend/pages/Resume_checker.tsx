@@ -23,6 +23,7 @@ const Resume_checker = () => {
   let fullName: string | any = "";
 
   useEffect(() => {
+    document.title = "Resume Checker - Resume Analyzer";
     email = user?.primaryEmailAddress?.emailAddress;
   }, [user]);
 

@@ -47,6 +47,7 @@ const DocumentsPage = () => {
     }
 
     useEffect(() => {
+        document.title = "Documents - Resume Analyzer";
         callGetDocumentFunc();
     }, [user]);
 

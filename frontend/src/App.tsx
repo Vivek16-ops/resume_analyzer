@@ -6,6 +6,7 @@ import Blog from "../pages/Blog.tsx"
 import Resume_checker from "../pages/Resume_checker.tsx"
 import DocumentsPage from "../pages/DocumentsPage.tsx"
 import BlogPage from '../pages/Blogpage.tsx';
+import AdminPage from '../pages/AdminPage.tsx';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="/Blog/:id" element={<BlogPage />} />
         <Route path="/Resume_checker" element={<Resume_checker />} />
         <Route path="/DocumentsPage" element={<DocumentsPage />} />
+        <Route path="/Admin" element={<AdminPage />} />
       </Routes>
     </div>
   )

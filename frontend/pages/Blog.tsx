@@ -44,6 +44,7 @@ const Blog = () => {
 
   // Fetch Blogs from API
   useEffect(() => {
+    document.title = "Blog - Resume Analyzer";
     const fetchBlogs = async () => {
       try {
         const response = await fetch("http://localhost:8000/api/getBlogs", {

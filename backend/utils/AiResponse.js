@@ -48,7 +48,7 @@ export async function analyzeResume(file, user_description = "") {
         const openai = new OpenAI({ apiKey: process.env.OPENAI_API });
 
         const response = await openai.chat.completions.create({
-            model: "gpt-4", // Use "gpt-4" or "gpt-3.5-turbo"
+            model: "gpt-4o-mini",
             messages: [{ role: "user", content: prompt }],
             temperature: 0.7,
         });

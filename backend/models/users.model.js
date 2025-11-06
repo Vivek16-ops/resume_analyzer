@@ -17,6 +17,12 @@ const userSchema = new mongoose.Schema({
     ], isAdmin: {
         type: Boolean,
         default: false
+    },isPremium: {
+        type: Boolean,
+        default: false
+    },totalRequests: {
+        type: Number,
+        default: 0
     }
 })
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Contact from "../../pages/Contact.tsx";
 import { Link } from "react-router-dom";
 
 const FrequentlyAsked = () => {

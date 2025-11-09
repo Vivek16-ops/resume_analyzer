@@ -97,7 +97,7 @@ const Navbar = () => {
           </div>}
 
           {/* Clerk Authentication */}
-          <div className="flex items-center hidden md:block">
+          <div className="hidden md:flex items-center">
             <SignedOut>
               <SignInButton mode="modal">
                 <button className="bg-white text-black font-semibold px-4 py-2 rounded-md hover:bg-gray-200 transition-all text-sm md:text-base">
@@ -105,7 +105,7 @@ const Navbar = () => {
                 </button>
               </SignInButton>
             </SignedOut>
-
+  
             <SignedIn>
               <UserButton
                 appearance={{

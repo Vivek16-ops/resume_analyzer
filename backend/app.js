@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from "dotenv";
 import cors from "cors"
 import testingRoutes from './routes/testing.js'
-import FileHandling from './routes/resumeHandling.js'
+import ResumeHandling from './routes/resumeHandling.js'
 import getRecentDetail from './routes/getRecentDetail.js'
 import getDocuments from './routes/getDocuments.js'
 import contactFormAPI from './routes/contactForm.js'
@@ -22,7 +22,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/testAPI', testingRoutes);
-app.use('/api/fileHandling', FileHandling);
+app.use('/api/fileHandling', ResumeHandling);
 app.use('/api/getRecentDetail', getRecentDetail)
 app.use('/api/getDocuments', getDocuments)
 app.use('/api/contactForm', contactFormAPI)

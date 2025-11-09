@@ -23,7 +23,7 @@ const Navbar = () => {
 
   // Register user on sign in if not already registered also check if it is admin or not
   useEffect(() => {
-    if(isSignedIn){
+    if (isSignedIn) {
       const registerUser = async () => {
         const response = await fetch('http://localhost:8000/api/registerUser', {
           method: 'POST',
@@ -43,7 +43,7 @@ const Navbar = () => {
       };
       registerUser();
     }
-   
+
   }, [isSignedIn]);
 
   return (
@@ -59,6 +59,9 @@ const Navbar = () => {
         <ul className="hidden md:flex gap-8 text-lg font-medium">
           <li className="cursor-pointer hover:text-gray-400 transition-colors duration-300 ease-in-out hover:scale-110">
             <Link to="/">Home</Link>
+          </li>
+          <li className="cursor-pointer hover:text-gray-400 transition-colors">
+            <Link to="/Features">Our Products</Link>
           </li>
           <li className="cursor-pointer hover:text-gray-400 transition-colors">
             <Link to="/About">About</Link>
@@ -143,6 +146,9 @@ const Navbar = () => {
           <ul className="flex flex-col gap-4 p-5 text-sm font-medium">
             <li className="cursor-pointer hover:text-gray-400 transition-colors">
               <Link to="/">Home</Link>
+            </li>
+            <li className="cursor-pointer hover:text-gray-400 transition-colors">
+              <Link to="/Features">Our Products</Link>
             </li>
             <li className="cursor-pointer hover:text-gray-400 transition-colors">
               <Link to="/About">About</Link>

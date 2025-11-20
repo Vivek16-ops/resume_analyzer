@@ -8,13 +8,13 @@ import { BlogsTab } from "../components/adminPage/BlogTab";
 import { PaymentsTab } from "../components/adminPage/PaymentTab";
 import { AdminsTab } from "../components/adminPage/AdminTab";
 import { SettingsTab } from "../components/adminPage/SettingTab";
+import { ProductsTab } from "../components/adminPage/ProductsTab";
 
 
 const AdminPage = () => {
     const { user, isSignedIn } = useUser();
     const navigate = useNavigate();
     let email: string | any = "";
-
 
     const validateAdmin = async () => {
         const response = await fetch('http://localhost:8000/api/validateAdmin', {
@@ -42,7 +42,6 @@ const AdminPage = () => {
 
         if (isSignedIn) {
             email = user?.primaryEmailAddress?.emailAddress;
-
             validateAdmin();
         }
     }, [isSignedIn]);
@@ -59,6 +58,8 @@ const AdminPage = () => {
                 return <AdminsTab />;
             case "settings":
                 return <SettingsTab />;
+            case "products":
+                return <ProductsTab />;
             default:
                 return <DashboardTab />;
         }
@@ -75,12 +76,22 @@ const AdminPage = () => {
                 </h2>
 
                 <nav className="flex flex-col gap-3">
+
+                    {/* Existing Items */}
                     <NavButton
                         label="Dashboard"
                         icon="📊"
                         active={activeTab === "dashboard"}
                         onClick={() => setActiveTab("dashboard")}
                     />
+
+                    <NavButton
+                        label="Products"
+                        icon="🛒"
+                        active={activeTab === "products"}
+                        onClick={() => setActiveTab("products")}
+                    />
+
                     <NavButton
                         label="Blogs"
                         icon="📝"
@@ -121,8 +132,12 @@ const AdminPage = () => {
 
             {/* Mobile Bottom Navigation */}
             <div className="md:hidden fixed bottom-0 left-0 w-full flex justify-around backdrop-blur-xl bg-white/10 border-t border-white/20 py-3 z-50">
+
                 {[
                     { label: "Dashboard", icon: "📊", tab: "dashboard" },
+
+                    { label: "Products", icon: "🛒", tab: "products" },
+
                     { label: "Blogs", icon: "📝", tab: "blogs" },
                     { label: "Payments", icon: "💳", tab: "payments" },
                     { label: "Admins", icon: "👥", tab: "admins" },
@@ -143,4 +158,4 @@ const AdminPage = () => {
     );
 }
 
-export default AdminPage
+export default AdminPage;

@@ -1,6 +1,6 @@
-import User from "../models/users.model.js"
-import Documents from "../models/documents.model.js"
-import { analyzeResume } from "../utils/AiResponse.js"
+import User from "../../models/users.model.js"
+import Documents from "../../models/documents.model.js"
+import { analyzeResume } from "../../utils/resume_analysis/AiResponse.js"
 
 export const fileHandlingFunc = async (req, res) => {
     try {
@@ -15,7 +15,7 @@ export const fileHandlingFunc = async (req, res) => {
         // Finding the user
         let user = await User.findOne({ email });
 
-        if(user && user.isPremium === false && user.totalRequests >= 5){
+        if(user && user.isPremium == false && user.totalRequests >= 5){
             return  res.status(403).json({ success: false, message: "You have exhausted your  5 free requests. Please upgrade to premium to use this feature more." });
         }
 

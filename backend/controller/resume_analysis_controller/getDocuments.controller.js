@@ -1,5 +1,5 @@
-import Documents from "../models/documents.model.js"
-import Users from "../models/users.model.js"
+import Documents from "../../models/documents.model.js"
+import Users from "../../models/users.model.js"
 export const GetDocuments = async (req, res) => {
     try {
         const { email } = await req.body;

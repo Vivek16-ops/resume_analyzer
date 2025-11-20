@@ -1,5 +1,5 @@
 import express from "express";
-import { fileHandlingFunc } from "../controller/ResumeHandling.controller.js";
+import { fileHandlingFunc } from "../../controller/resume_analysis_controller/ResumeHandling.controller.js";
 import multer from 'multer';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });

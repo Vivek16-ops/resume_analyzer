@@ -20,10 +20,14 @@ const userSchema = new mongoose.Schema({
     },isPremium: {
         type: Boolean,
         default: false
-    },totalRequests: {
+    },totalRequests: { // For tracking number of requests made by user for AI products
         type: Number,
         default: 0
-    }
+    },subscriptions :[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "UserSubscription",
+        default: []
+    }]
 })
 
 const User = mongoose.model("User", userSchema);

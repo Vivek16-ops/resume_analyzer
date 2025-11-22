@@ -1,5 +1,5 @@
-import User from "../models/users.model.js";
-import Documents from "../models/documents.model.js";
+import User from "../../models/users.model.js";
+import Documents from "../../models/documents.model.js";
 
 export const getRecentDetail = async (req, res) => {
   try {

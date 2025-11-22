@@ -8,6 +8,7 @@ import DocumentsPage from "../pages/DocumentsPage.tsx"
 import BlogPage from '../pages/Blogpage.tsx';
 import AdminPage from '../pages/AdminPage.tsx';
 import Features from '../pages/Features.tsx'
+import PaymentsPage from '../pages/Payments.tsx';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/DocumentsPage" element={<DocumentsPage />} />
         <Route path="/Admin" element={<AdminPage />} />
         <Route path="/Features" element={<Features />} />
+        <Route path="/Payments/:productName" element={<PaymentsPage />} />
       </Routes>
     </div>
   )
